@@ -1,61 +1,36 @@
-//layout
-//import Layout from "../layouts/default";
-
-//import hook react
 import { useState, useEffect } from "react";
 
-//import Head
 import Head from "next/head";
 
-//import router
 import Router from "next/router";
 
-//import axios
 import axios from "axios";
 
-//import js cookie
 import Cookies from "js-cookie";
 
 function Dashboard() {
-  //get token
   const token = Cookies.get("token");
 
-  //state user
   const [user, setUser] = useState({});
 
-  //function "fetchData"
   const fetchData = async () => {
-    //set axios header dengan type Authorization + Bearer token
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    //fetch user from Rest API
+
     await axios.get(`http://18.183.239.8:8080/user`).then((response) => {
-      //set response user to state
       setUser(response.data);
     });
   };
 
-  //hook useEffect
   useEffect(() => {
-    //check token empty
-    // if (!token) {
-    //   //redirect login page
-    //   Router.push("/login");
-    // }
-
-    //call function "fetchData"
     fetchData();
   }, []);
 
-  //function logout
   const logoutHanlder = async () => {
-    //set axios header dengan type Authorization + Bearer token
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    //fetch Rest API
+
     await axios.post(`http://18.183.239.8:8080/user`).then(() => {
-      //remove token from cookies
       Cookies.remove("token");
 
-      //redirect halaman login
       Router.push("/login");
     });
   };

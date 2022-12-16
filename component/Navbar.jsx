@@ -3,14 +3,11 @@ import Router from "next/router";
 
 const Navbar = () => {
   const nextPage = () => {
-    //const id = 2;
     Router.push({
       pathname: `/profil/profil`,
     });
   };
   return (
-    // <div className="w-screen">
-    //   <div className="">
     <div className="navbar bg-base-600">
       <div className="flex-1">
         <a className="btn btn-ghost normal-case text-xl">Airbnb App</a>
@@ -48,8 +45,6 @@ const Navbar = () => {
         </div>
       </div>
     </div>
-    //   </div>
-    // </div>
   );
 };
 

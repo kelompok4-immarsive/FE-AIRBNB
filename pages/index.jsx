@@ -5,7 +5,6 @@ import Router from "next/router";
 
 const Home = () => {
   const nextPage = () => {
-    //const id = 2;
     Router.push({
       pathname: `/register/register`,
     });

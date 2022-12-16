@@ -15,18 +15,15 @@ const Check = () => {
   // program to convert date to number
   // create date
   const d1 = new Date(checkIn);
-  console.log(d1);
 
   // converting to number
   const result = d1.getTime();
-  console.log(result);
 
   const d2 = new Date(checkOut);
-  console.log(d2);
 
   // converting to number
   const result2 = d2.getTime();
-  console.log(result2);
+
   const selisih = result2 - result;
   const a = selisih / 86400000;
 

@@ -1,14 +1,65 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Navbar from "../../component/Navbar";
 import Router from "next/router";
+import axios from "axios";
 
 const Detail = () => {
   const router = useRouter();
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
+  const [komentar, setKomentar] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // const selisih = result2 - result; /// 86400000;
+
+  const getKomentar = async () => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    };
+    axios
+      .get(`http://18.183.239.8:8080/komentars`, config)
+      .then((response) => {
+        setLoading(true);
+        console.log(response.data.data);
+        setKomentar(response.data.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const [createKomen, setCreatekomen] = useState({
+    Isi_komentar: "",
+  });
+
+  const postKomen = async (e) => {
+    e.preventDefault();
+    const { Isi_komentar } = createKomen;
+    axios
+      .post(
+        `http://18.183.239.8:8080/komentars`,
+        {
+          Isi_komentar,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("token"),
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  console.log(createKomen);
+  useEffect(() => {
+    getKomentar();
+  }, [0]);
 
   const checkIn2 = parseInt(checkIn);
   // program to convert date to number
@@ -55,7 +106,7 @@ const Detail = () => {
         </div>
         <div className="flex justify-center ">
           <h1 className="text-black mt-3 font-semibold text-alta-space-cadet">
-            {router?.query?.price}
+            {router?.query?.price}\nigth
           </h1>
         </div>
         <div className="flex justify-center mx-60">
@@ -63,6 +114,59 @@ const Detail = () => {
             {router?.query?.deskripsi}
           </h1>
         </div>
+        <div className="flex justify-center mx-60">
+          <h1 className="text-black mt-2 text-alta-space-cadet">
+            {komentar && loading === false
+              ? komentar.map((item) => {
+                  return (
+                    <div>
+                      <h1>Deva :{item?.Isi_komentar}</h1>
+                      <h1>Rating: {item?.Vote_star}</h1>
+                    </div>
+                  );
+                })
+              : null}
+          </h1>
+        </div>
+        <div className="flex justify-center mx-60">
+          <h1 className="text-black mt-2 text-alta-space-cadet">
+            <button>
+              <form onSubmit={(e) => postKomen(e)}>
+                {/* The button to open modal */}
+                <label htmlFor="my-modal" className="btn">
+                  Add Comment
+                </label>
+
+                {/* Put this part before </body> tag */}
+                <input type="checkbox" id="my-modal" className="modal-toggle" />
+                <div className="modal">
+                  <div className="modal-box">
+                    <h3 className="font-bold text-lg"></h3>
+                    <p className="py-4">
+                      <textarea
+                        className="textarea"
+                        placeholder="Your Comment"
+                        onChange={(e) =>
+                          setCreatekomen({
+                            ...createKomen,
+                            Isi_komentar: e.target.value,
+                          })
+                        }
+                        value={createKomen.createKomen}
+                      ></textarea>
+                    </p>
+                    <div className="modal-action">
+                      <label htmlFor="my-modal" className="btn" type="submit">
+                        Save
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </button>
+          </h1>
+        </div>
+
         <div className="flex justify-center">
           <h1 className="text-black mt-2 font-semibold text-alta-orange">
             {router?.query?.komen1}

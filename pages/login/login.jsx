@@ -6,6 +6,7 @@ import axios from "axios";
 const Login = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [error, setError] = useState();
 
   const postProject = async (e) => {
     e.preventDefault();
@@ -13,20 +14,18 @@ const Login = () => {
       email: email,
       password: password,
     };
-    await console.log(email);
-    await console.log(password);
+    await setEmail(email);
+    await setPassword(password);
     axios
       .post("http://18.183.239.8:8080/auth", temp)
       .then(function (response) {
-        console.log(response);
         sessionStorage.setItem(`token`, response.data.data.token);
         sessionStorage.setItem(`role`, response.data.data.role);
-        console.log(sessionStorage.getItem(`token`));
-        console.log(sessionStorage.getItem(`role`));
+
         Router.push(`/stays/stays`);
       })
       .catch(function (error) {
-        console.log(error);
+        setError(error);
         alert("wrong email or password");
       });
   };

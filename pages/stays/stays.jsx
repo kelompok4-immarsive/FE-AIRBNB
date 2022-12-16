@@ -7,6 +7,7 @@ import Router from "next/router";
 
 const Stays = () => {
   const [room, setRoom] = useState("");
+  const [komentar, setKomentar] = useState("");
   //const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -28,6 +29,24 @@ const Stays = () => {
         console.log(error);
       });
   };
+  const getKomentar = async () => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    };
+    axios
+      .get(`http://18.183.239.8:8080/komentars`, config)
+      .then((response) => {
+        //setLoading(true);
+        console.log(response.data);
+        setKomentar(response.data);
+        //setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const getDetail2 = (item, title2) => {
     Router.push({
       pathname: `/detail/${title2}`,
@@ -42,7 +61,8 @@ const Stays = () => {
 
   useEffect(() => {
     getRoom();
-  }, []);
+    getKomentar(0);
+  }, [0]);
 
   const nextPage = () => {
     //const id = 2;
@@ -129,6 +149,11 @@ const Stays = () => {
                 <h1 className="text-alta-space-cadet">Please Wait ...</h1>
               </div>
             )}
+          </div>
+          <div className="flex justify-center">
+            <p className="text-alta-space-cadet font-semibold text-xl mt-20">
+              {komentar?.Isi_Komentar?.substring(11, 16)}
+            </p>
           </div>
         </div>
       </div>
